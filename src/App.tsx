@@ -14,6 +14,7 @@ import {
   X
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
+import { LegalSection, LegalTab } from "./components/LegalSection";
 
 // Types for our data
 interface Project {
@@ -47,7 +48,7 @@ interface PortfolioData {
 const DEFAULT_DATA: PortfolioData = {
   name: "Odin (Flazzy)",
   tagline: "Leidenschaftlicher Programmierer & Tech-Enthusiast",
-  bio: "Hi, ich bin Odin – 13 Jahre alt und leidenschaftlicher Entwickler. Für mich bedeutet Programmieren, visionäre Ideen durch Code zum Leben zu erwecken. Von hochmodernen Web-Plattformen über intelligente Discord-Bots bis hin zu komplexen IT-Infrastrukturen erschaffe ich innovative Software-Lösungen mit unbändigem Tatendrang und absolutem Fokus auf Clean Code.",
+  bio: "Hi, ich bin Odin – leidenschaftlicher Entwickler. Für mich bedeutet Programmieren, visionäre Ideen durch Code zum Leben zu erwecken. Von hochmodernen Web-Plattformen über intelligente Discord-Bots bis hin zu komplexen IT-Infrastrukturen erschaffe ich innovative Software-Lösungen mit unbändigem Tatendrang und absolutem Fokus auf Clean Code.",
   skills: ["React", "TypeScript", "Node.js", "Tailwind CSS", "Python", "Lua", "Debian", "Linux", "Supabase", "VSCode", "Antigravity", "Docker"],
   categories: ["Alle", "FiveM", "Web", "Hosting", "System", "Bots", "Tools"],
   projects: [
@@ -333,6 +334,8 @@ export default function App() {
   const [activeCertFilter, setActiveCertFilter] = useState("Alle");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [legalOpen, setLegalOpen] = useState(false);
+  const [activeLegalTab, setActiveLegalTab] = useState<LegalTab>("impressum");
   const detailsRef = React.useRef<HTMLElement>(null);
 
   const filteredProjects = DEFAULT_DATA.projects.filter(project => 
@@ -342,6 +345,54 @@ export default function App() {
   const filteredCertificates = CERTIFICATES_DATA.filter(cert =>
     activeCertFilter === "Alle" || cert.company === activeCertFilter
   );
+
+  const openLegal = (tab: LegalTab) => {
+    setActiveLegalTab(tab);
+    setLegalOpen(true);
+    try {
+      window.history.pushState(null, "", `#${tab}`);
+    } catch {
+      // ignore
+    }
+    setTimeout(() => {
+      const el = document.getElementById("legal");
+      el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+  };
+
+  const closeLegal = () => {
+    setLegalOpen(false);
+    if (window.location.hash === "#impressum" || window.location.hash === "#datenschutz") {
+      try {
+        window.history.pushState(null, "", window.location.pathname);
+      } catch {
+        // ignore
+      }
+    }
+  };
+
+  useEffect(() => {
+    const checkHash = () => {
+      const hash = window.location.hash.toLowerCase();
+      if (hash === "#impressum") {
+        setActiveLegalTab("impressum");
+        setLegalOpen(true);
+        setTimeout(() => {
+          document.getElementById("legal")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 200);
+      } else if (hash === "#datenschutz") {
+        setActiveLegalTab("datenschutz");
+        setLegalOpen(true);
+        setTimeout(() => {
+          document.getElementById("legal")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 200);
+      }
+    };
+
+    checkHash();
+    window.addEventListener("hashchange", checkHash);
+    return () => window.removeEventListener("hashchange", checkHash);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -508,6 +559,30 @@ export default function App() {
                     <Github size={16} />
                     GitHub Profil
                   </a>
+
+                  <div className="pt-2 border-t border-neutral-900 flex items-center justify-center gap-6 text-xs font-mono text-neutral-500">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        openLegal("impressum");
+                      }}
+                      className="hover:text-white transition-colors uppercase tracking-wider underline underline-offset-4 cursor-pointer"
+                    >
+                      Impressum
+                    </button>
+                    <span>•</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        openLegal("datenschutz");
+                      }}
+                      className="hover:text-white transition-colors uppercase tracking-wider underline underline-offset-4 cursor-pointer"
+                    >
+                      Datenschutz
+                    </button>
+                  </div>
                 </motion.div>
               </div>
             </motion.div>
@@ -978,18 +1053,42 @@ export default function App() {
       </section>
 
 
+      {/* Legal Section (Impressum & Datenschutz) */}
+      <LegalSection
+        isOpen={legalOpen}
+        activeTab={activeLegalTab}
+        onClose={closeLegal}
+        onTabChange={setActiveLegalTab}
+      />
+
       {/* Footer */}
-      <footer className="py-10 px-6 border-t border-neutral-900 mt-20">
+      <footer className="py-10 px-6 border-t border-neutral-900 mt-12">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-neutral-600 text-sm">
             © {new Date().getFullYear()} FLAZZY.DE — DESIGNED BY AI
           </p>
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-neutral-600 text-sm italic">
+          <div className="flex flex-wrap justify-center gap-x-6 sm:gap-x-8 gap-y-3 text-neutral-500 text-sm font-medium">
             <a href="#certificates" className="hover:text-white transition-colors uppercase tracking-wider">Zertifikate</a>
             <a href="#work" className="hover:text-white transition-colors uppercase tracking-wider">Projekte</a>
             <a href="#skills" className="hover:text-white transition-colors uppercase tracking-wider">Skills</a>
             <a href={`mailto:${DEFAULT_DATA.socials.email}`} className="hover:text-white transition-colors uppercase tracking-wider">Kontakt</a>
             <a href={DEFAULT_DATA.socials.github} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors uppercase tracking-wider">GitHub</a>
+            <button
+              type="button"
+              onClick={() => openLegal("impressum")}
+              className="hover:text-white transition-colors uppercase tracking-wider font-mono text-xs cursor-pointer text-neutral-400"
+              id="footer-impressum-btn"
+            >
+              Impressum
+            </button>
+            <button
+              type="button"
+              onClick={() => openLegal("datenschutz")}
+              className="hover:text-white transition-colors uppercase tracking-wider font-mono text-xs cursor-pointer text-neutral-400"
+              id="footer-datenschutz-btn"
+            >
+              Datenschutz
+            </button>
           </div>
         </div>
       </footer>
