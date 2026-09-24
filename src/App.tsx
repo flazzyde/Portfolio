@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { LegalSection, LegalTab } from "./components/LegalSection";
+import { ContactSection } from "./components/ContactForm";
 
 // Types for our data
 interface Project {
@@ -40,6 +41,8 @@ interface PortfolioData {
   socials: {
     github: string;
     email: string;
+    phone: string;
+    phoneFormatted: string;
   };
 }
 
@@ -237,7 +240,9 @@ const DEFAULT_DATA: PortfolioData = {
   ],
   socials: {
     github: "https://github.com/builtbyodin",
-    email: "info@flazzy.de"
+    email: "info@flazzy.de",
+    phone: "+4917677917635",
+    phoneFormatted: "+49 0176 77917635"
   }
 };
 
@@ -481,10 +486,10 @@ export default function App() {
           </a>
           
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-neutral-400">
-            {["Zertifikate", "Projekte", "Skills"].map((item) => (
+            {["Zertifikate", "Projekte", "Skills", "Kontakt"].map((item) => (
               <a 
                 key={item} 
-                href={`#${item === "Projekte" ? "work" : item === "Zertifikate" ? "certificates" : item.toLowerCase()}`}
+                href={`#${item === "Projekte" ? "work" : item === "Zertifikate" ? "certificates" : item === "Kontakt" ? "contact" : item.toLowerCase()}`}
                 className="hover:text-white transition-colors"
                 id={`nav-${item.toLowerCase()}`}
               >
@@ -495,11 +500,12 @@ export default function App() {
 
           <div className="hidden md:block">
             <a 
-              href={`mailto:${DEFAULT_DATA.socials.email}`}
-              className="bg-white text-black px-4 py-2 rounded-full text-sm font-bold hover:bg-neutral-200 transition-all"
+              href="#contact"
+              className="bg-white text-black px-4 py-2 rounded-full text-sm font-bold hover:bg-neutral-200 transition-all cursor-pointer inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider"
               id="nav-hire-me"
             >
-              Kontaktieren
+              <Mail size={14} />
+              Kontakt
             </a>
           </div>
 
@@ -524,10 +530,10 @@ export default function App() {
               className="w-full bg-neutral-950/95 border-b border-neutral-900 md:hidden overflow-hidden backdrop-blur-xl absolute top-16 left-0 right-0 z-30"
             >
               <div className="px-6 py-8 flex flex-col gap-6 text-left">
-                {["Zertifikate", "Projekte", "Skills"].map((item, idx) => (
+                {["Zertifikate", "Projekte", "Skills", "Kontakt"].map((item, idx) => (
                   <motion.a 
                     key={item}
-                    href={`#${item === "Projekte" ? "work" : item === "Zertifikate" ? "certificates" : item.toLowerCase()}`}
+                    href={`#${item === "Projekte" ? "work" : item === "Zertifikate" ? "certificates" : item === "Kontakt" ? "contact" : item.toLowerCase()}`}
                     onClick={() => setIsMenuOpen(false)}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -545,10 +551,12 @@ export default function App() {
                   className="pt-2 flex flex-col gap-3"
                 >
                   <a 
-                    href={`mailto:${DEFAULT_DATA.socials.email}`}
-                    className="w-full py-3.5 rounded-xl bg-white text-black text-center font-bold text-sm tracking-wider uppercase font-mono shadow-md hover:bg-neutral-200 transition-colors"
+                    href="#contact"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="w-full py-3.5 rounded-xl bg-white text-black text-center font-bold text-sm tracking-wider uppercase font-mono shadow-md hover:bg-neutral-200 transition-colors inline-flex items-center justify-center gap-2"
                   >
-                    Kontaktieren
+                    <Mail size={16} />
+                    Kontaktformular
                   </a>
                   <a 
                     href={DEFAULT_DATA.socials.github} 
@@ -1053,6 +1061,9 @@ export default function App() {
       </section>
 
 
+      {/* Contact Form Section (Formspree) */}
+      <ContactSection onOpenLegal={openLegal} />
+
       {/* Legal Section (Impressum & Datenschutz) */}
       <LegalSection
         isOpen={legalOpen}
@@ -1071,7 +1082,7 @@ export default function App() {
             <a href="#certificates" className="hover:text-white transition-colors uppercase tracking-wider">Zertifikate</a>
             <a href="#work" className="hover:text-white transition-colors uppercase tracking-wider">Projekte</a>
             <a href="#skills" className="hover:text-white transition-colors uppercase tracking-wider">Skills</a>
-            <a href={`mailto:${DEFAULT_DATA.socials.email}`} className="hover:text-white transition-colors uppercase tracking-wider">Kontakt</a>
+            <a href="#contact" className="hover:text-white transition-colors uppercase tracking-wider">Kontakt</a>
             <a href={DEFAULT_DATA.socials.github} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors uppercase tracking-wider">GitHub</a>
             <button
               type="button"

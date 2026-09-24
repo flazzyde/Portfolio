@@ -197,8 +197,31 @@ function ImpressumDetails() {
             Kontaktmöglichkeiten
           </h4>
           <p className="text-sm text-neutral-300 leading-relaxed font-light">
-            E-Mail: <span className="font-mono text-white">info@flazzy.de</span><br />
-            Website: <span className="font-mono text-white">https://flazzy.de</span>
+            Telefon:{" "}
+            <a
+              href="tel:+4917677917635"
+              className="font-mono text-white underline underline-offset-4 hover:text-neutral-300 transition-colors"
+            >
+              +49 (0) 176 77917635
+            </a>
+            <br />
+            E-Mail:{" "}
+            <a
+              href="mailto:info@flazzy.de"
+              className="font-mono text-white underline underline-offset-4 hover:text-neutral-300 transition-colors"
+            >
+              info@flazzy.de
+            </a>
+            <br />
+            Website:{" "}
+            <a
+              href="https://flazzy.de"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-mono text-white underline underline-offset-4 hover:text-neutral-300 transition-colors"
+            >
+              https://flazzy.de
+            </a>
           </p>
         </div>
       </div>
@@ -321,7 +344,21 @@ function DatenschutzDetails() {
           Postdamm 1<br />
           33129 Delbrück<br />
           Nordrhein-Westfalen, Deutschland<br />
-          E-Mail: <span className="font-mono text-white">info@flazzy.de</span>
+          Telefon:{" "}
+          <a
+            href="tel:+4917677917635"
+            className="font-mono text-white underline underline-offset-4 hover:text-neutral-300 transition-colors"
+          >
+            +49 (0) 176 77917635
+          </a>
+          <br />
+          E-Mail:{" "}
+          <a
+            href="mailto:info@flazzy.de"
+            className="font-mono text-white underline underline-offset-4 hover:text-neutral-300 transition-colors"
+          >
+            info@flazzy.de
+          </a>
         </p>
       </div>
 
@@ -382,12 +419,24 @@ function DatenschutzDetails() {
 
         <div>
           <h4 className="font-display font-medium text-lg text-white mb-2">
-            6. Kontaktaufnahme per E-Mail
+            6. Kontaktaufnahme per Kontaktformular (Formspree) &amp; E-Mail
           </h4>
-          <p>
-            Wenn Sie uns per E-Mail kontaktieren, wird Ihre Anfrage inklusive aller daraus hervorgehenden
-            personenbezogenen Daten (Name, E-Mail-Adresse, Inhalt der Nachricht) zum Zwecke der Bearbeitung Ihres Anliegens
-            bei uns gespeichert und verarbeitet (Art. 6 Abs. 1 lit. b &amp; lit. f DSGVO).
+          <p className="mb-3">
+            Wenn Sie uns über das Kontaktformular oder per E-Mail Anfragen zukommen lassen, werden Ihre Angaben aus dem Anfrageformular inklusive der von Ihnen dort angegebenen Kontaktdaten (wie Name, E-Mail-Adresse, optionale Telefonnummer und Nachrichteninhalt) zwecks Bearbeitung der Anfrage und für den Fall von Anschlussfragen bei uns gespeichert und verarbeitet (Art. 6 Abs. 1 lit. b bzw. lit. f DSGVO).
+          </p>
+          <p className="mb-3">
+            Für die technische Abwicklung und Übermittlung der Kontaktanfragen setzen wir den Dienst <strong>Formspree</strong> (Formspree, Inc., Austin, Texas, USA) ein. Die von Ihnen im Formular eingegebenen Daten werden verschlüsselt an die Server von Formspree übertragen und von dort als E-Mail an uns weitergeleitet. Formspree speichert die Formulardaten zur Übermittlung und Spam-Prävention.
+          </p>
+          <p className="text-xs font-mono text-neutral-500">
+            Datenschutzerklärung von Formspree:{" "}
+            <a
+              href="https://formspree.io/legal/privacy-policy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white underline underline-offset-4 hover:text-neutral-300 font-mono text-xs"
+            >
+              https://formspree.io/legal/privacy-policy
+            </a>
           </p>
         </div>
 
