@@ -131,7 +131,7 @@ export function ContactSection({ onOpenLegal }: ContactSectionProps) {
 
             <div className="p-4 rounded-2xl bg-neutral-900/30 border border-neutral-900 text-neutral-400 text-xs leading-relaxed space-y-1.5">
               <div className="flex items-center gap-2 text-neutral-300 font-medium">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <CheckCircle2 size={14} className="text-emerald-400" />
                 <span>Schnelle Antwortzeiten</span>
               </div>
               <p className="text-neutral-500 font-sans text-xs">

@@ -29,6 +29,10 @@ interface Project {
   status?: string;
   discordInvite?: string;
   featured?: boolean;
+  platform?: string;
+  version?: string;
+  features?: string[];
+  highlights?: string[];
 }
 
 interface PortfolioData {
@@ -56,15 +60,40 @@ const DEFAULT_DATA: PortfolioData = {
   categories: ["Alle", "FiveM", "Web", "Hosting", "System", "Bots", "Tools"],
   projects: [
     {
-      id: "cloun",
+      id: "flazzy-toolbox",
       featured: true,
+      category: "Tools",
+      title: "Flazzy Toolbox",
+      description: "Modulare Windows-Toolbox mit Plugin-System: Termine und Notizen per Hotkey anlegen, dazu Kalender, Aufgaben und weitere Apps zum Nachinstallieren. Alle Daten bleiben lokal, ohne Konto und ohne Tracking.",
+      tech: ["Electron 33", "JavaScript", "NSIS", "Cloudflare R2", "Webviews"],
+      link: "https://toolbox.flazzy.de",
+      status: "v1.2.0 • In Entwicklung",
+      platform: "Windows 10/11 (64-Bit)",
+      version: "1.2.0",
+      features: [
+        "Quick-Add (Strg+Alt+Space): Termine & Notizen mit deutscher Erkennung von Datum und Uhrzeit",
+        "Command Palette (Strg+K): Fuzzy-Suche über alle Aktionen und installierten Plugins",
+        "Plugin-System: Apps wie Kalender, Notizen, Aufgaben & Passwort-Generator einzeln nachinstallierbar",
+        "Windows-Toast Erinnerungen & Tray-Modus für nahtlosen Hintergrundbetrieb",
+        "Tägliche Backups (max. 7), ZIP-Export/-Import & dynamische Theme-Engine (Dark/Light/System)",
+        "Auto-Update mit SHA-256-Prüfung, Rollback-Schutz und getrenntem Stable/Beta-Kanal"
+      ],
+      highlights: [
+        "100% lokal: Keine Registrierung, kein Login, kein Tracking",
+        "Theme- und Akzentfarben-Vererbung an alle Webview-Plugins",
+        "Granulare Update-Steuerung für jedes einzelne Plugin"
+      ]
+    },
+    {
+      id: "cloun",
+      featured: false,
       category: "Web",
       title: "Cloun by Flazzy",
-      description: "Ein hochmoderner Discord-Klon für Echtzeit-Kommunikation. Bietet Server, Channels, Direktnachrichten, Emoji-Reaktionen und ein ausgeklügeltes Invite-System.",
+      description: "Ein Discord-Klon für Echtzeit-Kommunikation mit Servern, Channels, Direktnachrichten und Emoji-Reaktionen. (Entwicklung abgebrochen / archiviert).",
       tech: ["React", "TypeScript", "Supabase", "Tailwind"],
       link: "https://cloun.flazzy.de",
       discordInvite: "https://discord.gg/TQs6McKJJs",
-      status: "Early Access / In Entwicklung"
+      status: "Abgebrochen"
     },
     {
       id: "flazzydj",
@@ -203,10 +232,9 @@ const DEFAULT_DATA: PortfolioData = {
       id: "9",
       category: "Web",
       title: "WebAI",
-      description: "Eine KI-gestützte Plattform für innovative Web-Services und intelligente Automatisierung. (Eingestellt — kann über meine E-Mail für Interessenten angefragt werden)",
+      description: "Eine KI-gestützte Plattform für innovative Web-Services und intelligente Automatisierung. (Projekt eingestellt / archiviert)",
       tech: ["React", "Gemini API", "Tailwind"],
-      link: "mailto:info@flazzy.de?subject=Interesse%20an%20WebAI",
-      status: "Eingestellt (Per E-Mail anfragbar)"
+      status: "Eingestellt"
     },
     {
       id: "10",
@@ -247,60 +275,32 @@ const DEFAULT_DATA: PortfolioData = {
 };
 
 function SkillCard({ skill }: { skill: string; key?: React.Key }) {
-  const ref = React.useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"]
-  });
-
-  const yIcon = useTransform(scrollYProgress, [0, 1], [15, -15]);
-
   return (
     <motion.div
-      ref={ref}
       variants={{
-        hidden: { opacity: 0, y: 20 },
+        hidden: { opacity: 0, y: 16 },
         visible: { 
           opacity: 1, 
           y: 0,
           transition: {
-            type: "spring",
-            stiffness: 100,
-            damping: 15
-          }
-        },
-        hover: {
-          y: -5,
-          borderColor: "rgba(255, 255, 255, 0.3)",
-          backgroundColor: "rgba(255, 255, 255, 0.05)",
-          transition: {
-            type: "spring",
-            stiffness: 400,
-            damping: 25
+            duration: 0.35,
+            ease: [0.16, 1, 0.3, 1]
           }
         }
       }}
-      whileHover="hover"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      className="p-4 sm:p-6 border border-neutral-800 rounded-xl transition-all flex items-center gap-3 sm:gap-4 bg-neutral-950/50 cursor-default group"
+      whileHover={{ 
+        y: -3,
+        borderColor: "rgba(255, 255, 255, 0.25)",
+        backgroundColor: "rgba(255, 255, 255, 0.04)"
+      }}
+      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+      className="p-4 sm:p-6 border border-neutral-800 rounded-xl flex items-center gap-3 sm:gap-4 bg-neutral-950/50 cursor-default group"
       id={`skill-${skill.toLowerCase()}`}
     >
-      <motion.div
-        style={{ y: yIcon }}
-        variants={{
-          hover: { 
-            scale: 1.2, 
-            rotate: 5,
-            color: "#ffffff"
-          }
-        }}
-        transition={{ type: "spring", stiffness: 400, damping: 10 }}
-      >
-        <Terminal size={18} className="text-neutral-500 group-hover:text-white transition-colors" />
-      </motion.div>
-      <span className="font-medium text-neutral-300 group-hover:text-white transition-colors">{skill}</span>
+      <div className="text-neutral-500 group-hover:text-white group-hover:scale-110 transition-all duration-200">
+        <Terminal size={18} />
+      </div>
+      <span className="font-medium text-neutral-300 group-hover:text-white transition-colors duration-200">{skill}</span>
     </motion.div>
   );
 }
@@ -330,6 +330,14 @@ const CERTIFICATES_DATA: Certificate[] = [
     verificationUrl: "https://www.credly.com/badges/f88c4876-bdbc-4378-99c2-bb2979ebe7d2",
     isIframe: true,
     iframeSrc: "https://www.credly.com/embedded_badge/f88c4876-bdbc-4378-99c2-bb2979ebe7d2"
+  },
+  {
+    id: "ibm-ai-literacy",
+    company: "IBM",
+    title: "IBM SkillsBuild - AI Literacy",
+    verificationUrl: "https://www.credly.com/badges/a1b3d5da-0467-4ab5-bf56-54e08c26638c",
+    isIframe: true,
+    iframeSrc: "https://www.credly.com/embedded_badge/a1b3d5da-0467-4ab5-bf56-54e08c26638c"
   }
 ];
 
@@ -425,45 +433,43 @@ export default function App() {
 
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
+    stiffness: 280,
+    damping: 32,
     restDelta: 0.001
   });
 
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, -200]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, -500]);
-  const rotateS = useTransform(scrollYProgress, [0, 1], [0, 45]);
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, -140]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.3,
+        staggerChildren: 0.05,
+        delayChildren: 0.12,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
+    hidden: { y: 14, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 10
+        duration: 0.48,
+        ease: [0.16, 1, 0.3, 1]
       }
     },
   };
 
   return (
     <div className="relative min-h-screen font-sans bg-black text-white overflow-x-hidden">
-      {/* Background Parallax Elements */}
+      {/* Background Ambient Glow */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         <motion.div 
-          style={{ y: y1, rotate: rotateS }}
+          style={{ y: y1 }}
           className="absolute top-[-10%] right-[-5%] w-[400px] h-[400px] bg-neutral-900/20 rounded-full blur-[120px]"
         />
         <motion.div 
@@ -675,10 +681,10 @@ export default function App() {
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-4 md:gap-8">
             <motion.div 
-              initial={{ opacity: 0, x: -35 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
               className="text-left"
             >
               <h2 className="font-display text-3xl sm:text-5xl md:text-6xl font-bold mb-3 md:mb-4 italic tracking-tighter text-white">Meine Zertifikate:</h2>
@@ -688,14 +694,14 @@ export default function App() {
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 1, delay: 0.2 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
               className="h-[1px] flex-grow bg-neutral-900 hidden md:block mx-12 mb-4 origin-left" 
             />
             <motion.span 
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
+              transition={{ duration: 0.4, delay: 0.15 }}
               className="font-mono text-xs sm:text-sm text-neutral-700 uppercase hidden md:block mb-4"
             >
               Qualifikationen ({filteredCertificates.length})
@@ -704,7 +710,7 @@ export default function App() {
 
           {/* Certificate Filter Bar */}
           <div className="flex gap-3 mb-12 md:mb-16 overflow-x-auto pb-4 scrollbar-hide">
-            {["Alle", "Cisco", "Microsoft", "Google", "HP"].map((company) => (
+            {["Alle", "Cisco", "IBM"].map((company) => (
               <button
                 key={company}
                 onClick={() => setActiveCertFilter(company)}
@@ -729,13 +735,14 @@ export default function App() {
                     href={cert.verificationUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    title={`${cert.title} – Auf Credly verifizieren`}
                     layout
-                    initial={{ opacity: 0, scale: 0.95 }}
+                    initial={{ opacity: 0, scale: 0.98 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.3 }}
-                    className="relative flex items-center justify-center overflow-hidden w-[180px] h-[300px] rounded-none border border-neutral-900 bg-neutral-950/20 hover:border-neutral-700 transition-all select-none cursor-pointer"
+                    exit={{ opacity: 0, scale: 0.98 }}
+                    whileHover={{ y: -4, borderColor: "rgba(255, 255, 255, 0.25)" }}
+                    transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                    className="relative flex items-center justify-center overflow-hidden w-[180px] h-[300px] rounded-2xl border border-neutral-900 bg-neutral-950/40 hover:border-neutral-700 transition-colors select-none cursor-pointer"
                   >
                     <div className="w-[150px] h-[270px] relative rounded-none overflow-hidden flex items-center justify-center pointer-events-none">
                       <div className="w-[150px] h-[270px] flex items-center justify-center">
@@ -773,10 +780,10 @@ export default function App() {
       <section id="work" className="py-16 md:py-20 px-4 sm:px-6 max-w-7xl mx-auto overflow-visible">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-6 md:gap-8">
           <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
             className="text-left"
           >
             <h2 className="font-display text-3xl sm:text-5xl md:text-6xl font-bold mb-3 md:mb-4 italic tracking-tighter text-white">Projekte</h2>
@@ -786,14 +793,14 @@ export default function App() {
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.2 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
             className="h-[1px] flex-grow bg-neutral-900 hidden md:block mx-12 mb-4 origin-left" 
           />
           <motion.span 
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
+            transition={{ duration: 0.4, delay: 0.15 }}
             className="font-mono text-sm text-neutral-700 uppercase hidden md:block mb-4"
           >
             Gesamt ({filteredProjects.length})
@@ -823,22 +830,20 @@ export default function App() {
               <motion.div
                 key={project.id}
                 layout
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                exit={{ opacity: 0, scale: 0.98 }}
                 whileHover={{ 
-                   y: -8, 
-                  scale: 1.01, 
-                  backgroundColor: "rgba(255, 255, 255, 0.04)",
-                  borderColor: "rgba(255, 255, 255, 0.15)",
-                  boxShadow: "0 20px 40px -15px rgba(0, 0, 0, 0.6)"
+                  y: -4, 
+                  backgroundColor: "rgba(255, 255, 255, 0.03)",
+                  borderColor: "rgba(255, 255, 255, 0.18)",
+                  boxShadow: "0 16px 36px -12px rgba(0, 0, 0, 0.55)"
                 }}
-                viewport={{ once: true, margin: "-50px" }}
+                viewport={{ once: true, margin: "-40px" }}
                 transition={{ 
-                  layout: { type: "spring", stiffness: 300, damping: 25 },
-                  y: { type: "spring", stiffness: 100, damping: 20 },
-                  scale: { type: "spring", stiffness: 400, damping: 10 },
-                  opacity: { duration: 0.6 }
+                  layout: { duration: 0.28, ease: [0.16, 1, 0.3, 1] },
+                  y: { duration: 0.22, ease: [0.16, 1, 0.3, 1] },
+                  opacity: { duration: 0.35, ease: [0.16, 1, 0.3, 1] }
                 }}
                 className={`group p-6 sm:p-8 rounded-[24px] sm:rounded-3xl border transition-all cursor-default flex flex-col h-full ${
                   project.featured 
@@ -860,7 +865,13 @@ export default function App() {
                       ))}
                     </div>
                     {project.status && (
-                      <span className="text-[9px] font-mono bg-neutral-800 text-neutral-400 px-2 py-1 rounded uppercase tracking-[0.1em]">
+                      <span className={`text-[9px] font-mono px-2 py-1 rounded uppercase tracking-[0.1em] ${
+                        project.status.includes('Abgebrochen') || project.status.includes('Eingestellt')
+                          ? 'bg-neutral-900 text-neutral-500 border border-neutral-800 line-through/none'
+                          : project.status.includes('Entwicklung')
+                          ? 'bg-amber-950/40 text-amber-400 border border-amber-900/40'
+                          : 'bg-neutral-800 text-neutral-400'
+                      }`}>
                         {project.status}
                       </span>
                     )}
@@ -882,30 +893,36 @@ export default function App() {
                     <ChevronDown size={14} className="transform -rotate-90 group-hover/btn:translate-x-1 transition-transform" />
                   </button>
                   
-                  <div className="grid grid-cols-2 gap-4">
-                    {project.discordInvite && (
-                      <a 
-                        href={project.discordInvite}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="py-4 px-6 rounded-xl bg-[#5865F2] text-white text-xs font-mono uppercase tracking-widest font-bold hover:bg-[#4752c4] transition-all flex items-center justify-center gap-2"
-                      >
-                        <MessageSquare size={14} />
-                        Discord
-                      </a>
-                    )}
-                    
-                    {project.link && (
-                      <a 
-                        href={project.link}
-                        target={project.link.startsWith("mailto:") ? "_self" : "_blank"}
-                        rel="noopener noreferrer"
-                        className="py-4 px-6 rounded-xl bg-white text-black text-xs font-mono uppercase tracking-widest font-bold hover:bg-neutral-200 transition-all flex items-center justify-center gap-2"
-                      >
-                        {project.link.startsWith("mailto:") ? "Anfragen" : "Demo"}
-                      </a>
-                    )}
-                  </div>
+                  {(project.discordInvite || project.link) && (
+                    <div className={`grid gap-4 ${project.discordInvite && project.link ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                      {project.discordInvite && (
+                        <a 
+                          href={project.discordInvite}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="py-4 px-6 rounded-xl bg-[#5865F2] text-white text-xs font-mono uppercase tracking-widest font-bold hover:bg-[#4752c4] transition-all flex items-center justify-center gap-2"
+                        >
+                          <MessageSquare size={14} />
+                          Discord
+                        </a>
+                      )}
+                      
+                      {project.link && (
+                        <a 
+                          href={project.link}
+                          target={project.link.startsWith("mailto:") ? "_self" : "_blank"}
+                          rel="noopener noreferrer"
+                          className="py-4 px-6 rounded-xl bg-white text-black text-xs font-mono uppercase tracking-widest font-bold hover:bg-neutral-200 transition-all flex items-center justify-center gap-2"
+                        >
+                          {project.id === "flazzy-toolbox" 
+                            ? "Website & Download" 
+                            : project.link.startsWith("mailto:") 
+                            ? "Kontakt" 
+                            : "Demo"}
+                        </a>
+                      )}
+                    </div>
+                  )}
                 </div>
               </motion.div>
             ))}
@@ -923,9 +940,10 @@ export default function App() {
           {selectedProject ? (
             <motion.div
               key={selectedProject.id}
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -50 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               className="max-w-7xl mx-auto px-4 sm:px-6"
             >
               <div className="bg-neutral-900/50 rounded-[24px] sm:rounded-[40px] p-6 sm:p-12 md:p-20 border border-neutral-800 relative overflow-hidden text-left">
@@ -964,22 +982,76 @@ export default function App() {
 
                       <div className="p-5 sm:p-8 rounded-2xl bg-neutral-950 border border-neutral-800">
                         <h4 className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-3 sm:mb-4">Projekt Status</h4>
-                        <div className={`flex items-center gap-2 ${selectedProject.status?.includes('Entwicklung') ? 'text-amber-500' : 'text-green-500'}`}>
-                          {selectedProject.status?.includes('Entwicklung') ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
-                          <span className="text-xs sm:text-sm">{selectedProject.status || 'Abgeschlossen / In Produktion'}</span>
+                        <div className={`flex items-center gap-2 ${
+                          selectedProject.status?.includes('Abgebrochen') || selectedProject.status?.includes('Eingestellt')
+                            ? 'text-neutral-500'
+                            : selectedProject.status?.includes('Entwicklung') 
+                            ? 'text-amber-500' 
+                            : 'text-green-500'
+                        }`}>
+                          {selectedProject.status?.includes('Abgebrochen') || selectedProject.status?.includes('Eingestellt') ? (
+                            <X size={16} className="text-neutral-500" />
+                          ) : selectedProject.status?.includes('Entwicklung') ? (
+                            <Loader2 size={16} className="animate-spin" />
+                          ) : (
+                            <CheckCircle2 size={16} />
+                          )}
+                          <span className="text-xs sm:text-sm font-mono">{selectedProject.status || 'Abgeschlossen / In Produktion'}</span>
                         </div>
+
+                        {selectedProject.platform && (
+                          <div className="mt-4 pt-4 border-t border-neutral-900 flex items-center justify-between text-xs font-mono">
+                            <span className="text-neutral-500 uppercase tracking-wider">Plattform</span>
+                            <span className="text-neutral-300">{selectedProject.platform}</span>
+                          </div>
+                        )}
                       </div>
+
+                      {selectedProject.features && selectedProject.features.length > 0 && (
+                        <div className="mt-6 p-5 sm:p-8 rounded-2xl bg-neutral-950/80 border border-neutral-800">
+                          <h4 className="text-xs font-mono uppercase tracking-widest text-neutral-400 mb-4 flex items-center gap-2">
+                            <CheckCircle2 size={14} className="text-white" />
+                            Kernfunktionen & Features
+                          </h4>
+                          <ul className="space-y-2.5">
+                            {selectedProject.features.map((feat, idx) => (
+                              <li key={idx} className="text-xs sm:text-sm text-neutral-300 flex items-start gap-2.5 leading-relaxed font-light">
+                                <span className="text-neutral-600 font-mono text-xs mt-0.5">•</span>
+                                <span>{feat}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                     </div>
 
-                    <div className="flex flex-col justify-end gap-4 sm:gap-6">
-                      <p className="text-neutral-500 text-xs sm:text-sm leading-relaxed max-w-sm mb-2 sm:mb-4">
-                        {selectedProject.id === 'cloun' 
-                          ? "Cloun befindet sich aktuell in der aktiven Entwicklungsphase (Early Access). Tritt dem Discord-Server bei, um exklusive Einblicke und Updates zu erhalten."
-                          : selectedProject.id === '9'
-                          ? "WebAI wurde als eigenständige Plattform eingestellt. Da ich das Projekt dennoch sehr schätze, steht die gesamte Codebase weiterhin zur Verfügung und kann bei ernsthaftem Interesse einfach per E-Mail angefragt werden."
-                          : "Dies ist eine detaillierte Übersicht des Projekts. Hier könnten weitere Informationen wie Herausforderungen, Lösungen und Metriken stehen."
-                        }
-                      </p>
+                    <div className="flex flex-col justify-between gap-6">
+                      <div>
+                        {selectedProject.highlights && selectedProject.highlights.length > 0 && (
+                          <div className="mb-6 p-5 sm:p-6 rounded-2xl bg-neutral-900/40 border border-neutral-800 text-left">
+                            <h4 className="text-xs font-mono uppercase tracking-widest text-neutral-400 mb-3">Besonderheiten & Architektur</h4>
+                            <ul className="space-y-2.5">
+                              {selectedProject.highlights.map((h, idx) => (
+                                <li key={idx} className="text-xs sm:text-sm text-neutral-300 flex items-start gap-2.5 leading-relaxed font-light">
+                                  <span className="text-white text-xs font-bold mt-0.5">✓</span>
+                                  <span>{h}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed mb-4">
+                          {selectedProject.id === 'flazzy-toolbox'
+                            ? "Flazzy Toolbox wurde als datenschutzfreundliche, modulare Windows-Produktivitätszentrale gebaut: Alle Termine, Notizen und Aufgaben verbleiben 100% lokal ohne Account-Zwang. Über das Webview-Plugin-System kann die App nahtlos um eigene Erweiterungen ergänzt werden."
+                            : selectedProject.id === 'cloun' 
+                            ? "Die Entwicklung von Cloun wurde offiziell abgebrochen. Das Projekt wird nicht mehr weitergeführt und dient als archivierte Referenz."
+                            : selectedProject.id === '9'
+                            ? "WebAI war eine modulare Plattform für KI-gestützte Web-Services und intelligente Automatisierung. Die Entwicklung wurde offiziell eingestellt und das Projekt dient als archivierte Code-Referenz."
+                            : "Dies ist eine detaillierte Übersicht des Projekts. Hier könnten weitere Informationen wie Herausforderungen, Lösungen und Metriken stehen."
+                          }
+                        </p>
+                      </div>
                       
                       <div className="flex flex-col gap-3 sm:gap-4">
                         {selectedProject.link && (
@@ -989,7 +1061,11 @@ export default function App() {
                             rel="noopener noreferrer"
                             className="bg-white text-black px-6 py-3.5 rounded-xl font-bold hover:bg-neutral-200 transition-all text-center flex items-center justify-center gap-2 text-xs sm:text-sm uppercase tracking-wider font-mono shadow-md"
                           >
-                            {selectedProject.link.startsWith("mailto:") ? "Projekt per E-Mail anfragen" : "Live Demo besuchen"}
+                            {selectedProject.id === 'flazzy-toolbox'
+                              ? "Website & Download (toolbox.flazzy.de)"
+                              : selectedProject.link.startsWith("mailto:") 
+                              ? "Kontakt per E-Mail" 
+                              : "Live Demo besuchen"}
                           </a>
                         )}
                         
@@ -1104,33 +1180,18 @@ export default function App() {
         </div>
       </footer>
 
-      {/* Watermark */}
-      <motion.a
-        href="mailto:info@flazzy.de?subject=Interesse%20an%20WebAI"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        whileHover={{ scale: 1.05 }}
-        className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-50 flex items-center gap-2 bg-neutral-900/80 backdrop-blur-md border border-neutral-800 px-3.5 py-3 rounded-full shadow-2xl group hover:border-neutral-500 transition-all text-neutral-400 hover:text-white"
-        id="flazzy-watermark"
-        title="WebAI anfragen via E-Mail"
-      >
-        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-amber-500 group-hover:bg-amber-400 animate-pulse transition-colors" />
-        <span className="text-[9px] sm:text-[10px] font-mono tracking-widest text-neutral-500 group-hover:text-white uppercase transition-colors">
-          WebAI Anfragen ✉
-        </span>
-      </motion.a>
-
       {/* Scroll To Top Button */}
       <AnimatePresence>
         {showScrollTop && (
           <motion.button
-            initial={{ opacity: 0, y: 20, scale: 0.8 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.8 }}
-            whileHover={{ scale: 1.1, backgroundColor: "#fff", color: "#000" }}
-            whileTap={{ scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.85, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.85, y: 10 }}
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.94 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
             onClick={scrollToTop}
-            className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 p-3 sm:p-4 rounded-full bg-neutral-900/80 border border-neutral-800 text-white shadow-2xl transition-colors backdrop-blur-md hover:border-neutral-500"
+            className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 p-3 sm:p-4 rounded-full bg-neutral-900/90 border border-neutral-800 text-white shadow-2xl backdrop-blur-md hover:border-neutral-500 hover:bg-neutral-800 transition-colors"
             aria-label="Scroll to top"
             id="scroll-to-top"
           >
